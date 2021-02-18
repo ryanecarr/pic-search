@@ -4,6 +4,7 @@ import SuggestedTerms from './SuggestedTerms';
 import ImageList from './ImageList';
 import unsplash from '../api/unsplash';
 import seedData from '../seedData';
+import '../App.css';
 
 class App extends Component {
   constructor(props) {

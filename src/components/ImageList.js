@@ -1,19 +1,18 @@
 import React from 'react';
 import ImageCard from './ImageCard';
 
-const ImageList = () => {
+const ImageList = (props) => {
   return (
     <>
-      {this.props.images.map((image) => (
+      {props.images.map(({ id, user, alt_description, likes, urls }) => (
         <div className='column'>
           <ImageCard
-            id={image.user.id}
-            avatar={image.user.profile_image.small}
-            user={image.user.name}
-            image={image.urls.small}
-            alt={image.alt_description}
-            likes={image.likes}
-            key={image.id}
+            avatar={user.profile_image.small}
+            user={user.name}
+            image={urls.small}
+            alt={alt_description}
+            likes={likes}
+            key={id}
           />
         </div>
       ))}

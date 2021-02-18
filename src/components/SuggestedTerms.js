@@ -15,6 +15,7 @@ class SuggestedTerms extends PureComponent {
       <div className='row'>
         {set.map((term) => (
           <button
+            key={term}
             style={{ marginBottom: '5px' }}
             className='ui button'
             value={term}
