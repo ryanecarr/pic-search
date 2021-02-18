@@ -19,6 +19,7 @@ class ImageCard extends Component {
   onFormSubmit = (e) => {
     e.preventDefault();
     this.setState({
+      comment: '',
       comments: [...this.state.comments, this.state.comment],
     });
   };
