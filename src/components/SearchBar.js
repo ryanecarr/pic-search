@@ -1,43 +1,34 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-class SearchBar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      term: '',
-    };
-  }
-  onFormSubmit = (e) => {
+const SearchBar = ({ onSubmit, loading }) => {
+  const [term, setTerm] = useState('');
+  const onFormSubmit = (e) => {
     e.preventDefault();
-    this.props.onSubmit(this.state.term, 'form');
+    onSubmit(term, 'form');
   };
-  render() {
-    return (
-      <div className='row'>
-        <div className='column centered'>
-          <form className='ui search' onSubmit={this.onFormSubmit}>
-            <div className='field'>
-              <div
-                className={`ui fluid big icon input ${
-                  this.props.loading ? 'loading' : ''
-                }`}
-              >
-                <input
-                  value={this.state.term}
-                  className='prompt'
-                  type='text'
-                  autoComplete='off'
-                  placeholder='Search...'
-                  onChange={(e) => this.setState({ term: e.target.value })}
-                />
-                <i className='search icon'></i>
-              </div>
+  return (
+    <div className='row'>
+      <div className='column centered'>
+        <form className='ui search' onSubmit={onFormSubmit}>
+          <div className='field'>
+            <div
+              className={`ui fluid big icon input ${loading ? 'loading' : ''}`}
+            >
+              <input
+                value={term}
+                className='prompt'
+                type='text'
+                autoComplete='off'
+                placeholder='Search...'
+                onChange={(e) => setTerm(e.target.value)}
+              />
+              <i className='search icon'></i>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default SearchBar;

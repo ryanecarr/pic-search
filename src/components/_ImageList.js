@@ -1,10 +1,10 @@
 import React from 'react';
 import ImageCard from './ImageCard';
 
-const ImageList = ({ images }) => {
+const ImageList = (props) => {
   return (
     <>
-      {images.map(({ id, user, alt_description, likes, urls }) => (
+      {props.images.map(({ id, user, alt_description, likes, urls }) => (
         <div className='column'>
           <ImageCard
             avatar={user.profile_image.small}
