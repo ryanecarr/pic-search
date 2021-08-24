@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import SearchBar from './SearchBar';
 import ImageList from './ImageList';
 import firebase from '../api/firebase';
@@ -7,7 +6,6 @@ import unsplash from '../api/unsplash';
 import seedData from '../seedData';
 
 const App = () => {
-  const visitorId = uuidv4();
   const [images, setImages] = useState([]);
   const [fireBaseImages, setFireBaseImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -115,26 +113,43 @@ const App = () => {
     });
   };
 
-  const addUuidToLocalStorage = () => {
-    const uuid = localStorage.getItem('uuid');
-    if (uuid) {
-      setUuid(uuid);
+  const addUuidToLocalStorage = (anonId) => {
+    const uid = localStorage.getItem('uid');
+    if (uid) {
+      setUuid(uid);
     } else {
-      setUuid(visitorId);
-      localStorage.setItem('uuid', visitorId);
-      addFireBaseUser(visitorId);
+      setUuid(anonId);
+      localStorage.setItem('uid', anonId);
+      addFireBaseUser(anonId);
     }
   };
 
+  const anonSignIn = () => {
+    // [START auth_anon_sign_in]
+    firebase
+      .auth()
+      .signInAnonymously()
+      .then((response) => {
+        addUuidToLocalStorage(response.user.uid);
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
+    // [END auth_anon_sign_in]
+  };
+
   useEffect(() => {
-    addUuidToLocalStorage();
-    //onSearchSubmit('coffee');
+    anonSignIn();
     onSearchSubmit(seedData[Math.floor(Math.random() * seedData.length + 1)]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    getFireBaseImages();
+    if (uuid) {
+      getFireBaseImages();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images]);
 
