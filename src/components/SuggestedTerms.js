@@ -2,7 +2,7 @@ import React from 'react';
 
 const SuggestedTerms = ({ onClick, terms }) => {
   const onButtonClick = (e) => {
-    onClick(e.target.value, 'btn');
+    onClick(e.target.value);
   };
   for (let i = terms.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

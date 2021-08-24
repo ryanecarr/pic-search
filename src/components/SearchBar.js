@@ -4,7 +4,7 @@ const SearchBar = ({ onSubmit, loading }) => {
   const [term, setTerm] = useState('');
   const onFormSubmit = (e) => {
     e.preventDefault();
-    onSubmit(term, 'form');
+    onSubmit(term);
   };
   return (
     <div className='row'>

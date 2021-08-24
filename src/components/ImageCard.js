@@ -1,19 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const ImageCard = ({ avatar, user, image, alt, likes }) => {
-  const [liked, setLiked] = useState(false);
+const ImageCard = ({
+  id,
+  avatar,
+  user,
+  image,
+  alt,
+  likes,
+  liked_by_user,
+  imgComments = [],
+  handleComment,
+  handleLike,
+}) => {
+  const [liked, setLiked] = useState(liked_by_user);
   const [numLikes, setNumLikes] = useState(likes);
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState(imgComments);
+  const firstUpdate = useRef(true);
+
   const onLikeClick = () => {
     setLiked(!liked);
     setNumLikes(!liked ? numLikes + 1 : numLikes - 1);
   };
+
   const onFormSubmit = (e) => {
     e.preventDefault();
-    setComment('');
+    handleComment(id, numLikes, comment);
     setComments([...comments, comment]);
+    setComment('');
   };
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+    } else {
+      handleLike(id, numLikes);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [liked]);
+
   return (
     <div className='ui raised card'>
       <div className='content'>
@@ -45,11 +70,11 @@ const ImageCard = ({ avatar, user, image, alt, likes }) => {
             />
           </div>
         </form>
-        <div class='ui middle aligned divided list'>
+        <div className='ui middle aligned divided list'>
           {comments.map((comment) => (
-            <div class='item'>
-              <i class='large user middle circle icon'></i>
-              <div class='content'>{comment}</div>
+            <div className='item'>
+              <i className='large user middle circle icon'></i>
+              <div className='content'>{comment}</div>
             </div>
           ))}
         </div>
