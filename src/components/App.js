@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  withRouter,
+} from 'react-router-dom';
 import SearchBar from './SearchBar';
 import ImageList from './ImageList';
+import UserLikes from './UserLikes';
 import firebase from '../api/firebase';
 import unsplash from '../api/unsplash';
 import seedData from '../seedData';
@@ -24,19 +32,20 @@ const App = () => {
 
   const getFireBaseImages = () => {
     const ref = firebase.firestore().collection('photos');
-    ref.get().then((item) => {
+    ref.onSnapshot((item) => {
       const items = item.docs.map((doc) => doc.data());
       setFireBaseImages(items);
     });
   };
 
-  const addFireBaseImage = (photosRef, doc, likes, comment) => {
+  const addFireBaseImage = (photosRef, doc, likes, comment, image) => {
     photosRef
       .set({
         id: doc,
         likes: likes,
         comments: comment ? [comment] : [],
         liked_by_user: comment ? [] : [uuid],
+        image: image,
       })
       .then(() => {
         console.log('Document successfully added');
@@ -91,24 +100,24 @@ const App = () => {
       });
   };
 
-  const handleComment = (doc, likes, comment) => {
+  const handleComment = (doc, likes, comment, image) => {
     const photosRef = firebase.firestore().collection('photos').doc(doc);
     photosRef.get().then((document) => {
       if (document.exists) {
         updateFireBaseImageComments(photosRef, comment);
       } else {
-        addFireBaseImage(photosRef, doc, likes, comment);
+        addFireBaseImage(photosRef, doc, likes, comment, image);
       }
     });
   };
 
-  const handleLike = (doc, likes, comment = '') => {
+  const handleLike = (doc, likes, comment = '', image) => {
     const photosRef = firebase.firestore().collection('photos').doc(doc);
     photosRef.get().then((document) => {
       if (document.exists) {
         updateFireBaseImageLikes(photosRef, document, likes);
       } else {
-        addFireBaseImage(photosRef, doc, likes, comment);
+        addFireBaseImage(photosRef, doc, likes, comment, image);
       }
     });
   };
@@ -125,7 +134,6 @@ const App = () => {
   };
 
   const anonSignIn = () => {
-    // [START auth_anon_sign_in]
     firebase
       .auth()
       .signInAnonymously()
@@ -133,11 +141,8 @@ const App = () => {
         addUuidToLocalStorage(response.user.uid);
       })
       .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
+        console.log('Authentication failed:', error);
       });
-    // [END auth_anon_sign_in]
   };
 
   useEffect(() => {
@@ -147,26 +152,45 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (uuid) {
-      getFireBaseImages();
-    }
+    getFireBaseImages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [images]);
+  }, []);
 
   return (
-    <div className='ui container'>
-      <div className='ui stackable three column padded relaxed grid'>
-        <SearchBar onSubmit={onSearchSubmit} loading={loading} />
-        <ImageList
-          images={images}
-          fireBaseImages={fireBaseImages}
-          handleComment={handleComment}
-          handleLike={handleLike}
-          uuid={uuid}
-        />
-      </div>
-    </div>
+    <Router>
+      <>
+        <div className='ui container'>
+          <div className='ui large secondary pointing menu'>
+            <Link to='/' className='item'>
+              Home
+            </Link>
+            <Link to='/likes' className='item'>
+              Likes
+            </Link>
+          </div>
+        </div>
+        <Switch>
+          <div className='ui container'>
+            <Route exact path='/'>
+              <div className='ui stackable three column padded relaxed grid'>
+                <SearchBar onSubmit={onSearchSubmit} loading={loading} />
+                <ImageList
+                  images={images}
+                  fireBaseImages={fireBaseImages}
+                  handleComment={handleComment}
+                  handleLike={handleLike}
+                  uuid={uuid}
+                />
+              </div>
+            </Route>
+            <Route path='/likes'>
+              <UserLikes fireBaseImages={fireBaseImages} uuid={uuid} />
+            </Route>
+          </div>
+        </Switch>
+      </>
+    </Router>
   );
 };
 
-export default App;
+export default withRouter(App);

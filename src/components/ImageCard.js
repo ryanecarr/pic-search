@@ -15,6 +15,7 @@ const ImageCard = ({
   const [liked, setLiked] = useState(liked_by_user);
   const [numLikes, setNumLikes] = useState(likes);
   const [comment, setComment] = useState('');
+  const [cardImage, setCardImage] = useState(image);
   const [comments, setComments] = useState(imgComments);
   const firstUpdate = useRef(true);
 
@@ -25,7 +26,7 @@ const ImageCard = ({
 
   const onFormSubmit = (e) => {
     e.preventDefault();
-    handleComment(id, numLikes, comment);
+    handleComment(id, numLikes, comment, cardImage);
     setComments([...comments, comment]);
     setComment('');
   };
@@ -34,7 +35,7 @@ const ImageCard = ({
     if (firstUpdate.current) {
       firstUpdate.current = false;
     } else {
-      handleLike(id, numLikes);
+      handleLike(id, numLikes, comment, cardImage);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [liked]);

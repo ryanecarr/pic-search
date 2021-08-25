@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageCard from './ImageCard';
 
 const ImageList = ({
@@ -8,8 +8,10 @@ const ImageList = ({
   handleLike,
   uuid,
 }) => {
-  let syncedImages = [];
+  const [syncedImages, setSyncedImages] = useState([]);
+  
   const syncImages = () => {
+    let syncedImages = [];
     // eslint-disable-next-line array-callback-return
     images.map((image) => {
       let match = fireBaseImages.find((fbImage) => fbImage.id === image.id);
@@ -24,10 +26,14 @@ const ImageList = ({
         liked_by_user: liked_by_user ? liked_by_user : false,
       });
     });
+    setSyncedImages(syncedImages);
   };
 
-  syncImages();
-
+  useEffect(() => {
+    syncImages();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [images]);
+  
   return (
     <>
       {syncedImages.map(
