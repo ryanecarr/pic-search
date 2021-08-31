@@ -111,7 +111,7 @@ const App = () => {
     });
   };
 
-  const handleLike = (doc, likes, comment = '', image) => {
+  const handleLike = (doc, likes, comment = '', image = '') => {
     const photosRef = firebase.firestore().collection('photos').doc(doc);
     photosRef.get().then((document) => {
       if (document.exists) {
@@ -184,7 +184,11 @@ const App = () => {
               </div>
             </Route>
             <Route path='/likes'>
-              <UserLikes fireBaseImages={fireBaseImages} uuid={uuid} />
+              <UserLikes
+                fireBaseImages={fireBaseImages}
+                handleLike={handleLike}
+                uuid={uuid}
+              />
             </Route>
           </div>
         </Switch>
