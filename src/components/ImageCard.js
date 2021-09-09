@@ -26,9 +26,11 @@ const ImageCard = ({
 
   const onFormSubmit = (e) => {
     e.preventDefault();
-    handleComment(id, numLikes, comment, cardImage);
-    setComments([...comments, comment]);
-    setComment('');
+    if (comment !== '') {
+      handleComment(id, numLikes, comment, cardImage);
+      setComments([...comments, comment]);
+      setComment('');
+    }
   };
 
   useEffect(() => {
@@ -37,11 +39,11 @@ const ImageCard = ({
     } else {
       handleLike(id, numLikes, comment, cardImage);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [liked]);
 
   return (
-    <div className='ui raised card'>
+    <div className='ui fluid card'>
       <div className='content'>
         <img className='ui avatar image' src={avatar} alt={user} /> {user}
       </div>
@@ -51,34 +53,41 @@ const ImageCard = ({
       <div className='content'>
         <span className='right floated'>
           <i
-            className={`heart like icon ${liked ? 'red filled' : 'outline'}`}
+            className={`large heart like icon ${
+              liked ? 'red filled' : 'outline'
+            }`}
             onClick={onLikeClick}
           ></i>
-          {numLikes}
         </span>
-        <i className='comment icon'></i>
-        {comments.length} comments
+        {numLikes} likes
       </div>
-      <div className='extra content'>
+      <div className='content'>
+        <div className='ui middle aligned list'>
+          {comments.length ? comments.map((comment) => (
+            <div className='item'>
+              <div className='content'>
+                anonymous <span className='comment'>{comment}</span>
+              </div>
+            </div>
+          )) : '...no comments yet, be the first!'}
+        </div>
         <form onSubmit={onFormSubmit}>
-          <div className='ui large transparent left icon input'>
-            <i className='heart outline icon'></i>
+          <div className='ui large transparent input fluid comment'>
             <input
               type='text'
-              placeholder='Add Comment...'
+              placeholder={
+                comments.length >= 5
+                  ? 'Commenting disabled...'
+                  : 'Add a comment...'
+              }
               value={comment}
               onChange={(e) => setComment(e.target.value)}
+              maxLength='150'
+              disabled={comments.length >= 5 ? 'disabled' : ''}
+              required
             />
           </div>
         </form>
-        <div className='ui middle aligned divided list'>
-          {comments.map((comment) => (
-            <div className='item'>
-              <i className='large user middle circle icon'></i>
-              <div className='content'>{comment}</div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

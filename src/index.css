@@ -23,3 +23,30 @@ code {
   height: 15px;
 }
 
+.imagegram-logo {
+  font-family: 'Satisfy', cursive;
+  font-size: 40px;
+}
+
+.top-bar {
+  margin-top: 15px !important;
+}
+
+.top-bar .icon {
+  color: black;
+  margin-left: 10px;
+}
+
+.content {
+  border-top: 0 !important;
+  font-weight: bold;
+}
+
+.content .comment {
+  font-weight: normal;
+}
+
+.extra {
+  border-top: 0 !important;
+}
+

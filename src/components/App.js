@@ -3,21 +3,27 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   withRouter,
+  useLocation,
 } from 'react-router-dom';
-import SearchBar from './SearchBar';
+
 import ImageList from './ImageList';
 import UserLikes from './UserLikes';
 import firebase from '../api/firebase';
 import unsplash from '../api/unsplash';
 import seedData from '../seedData';
+import Navbar from './Navbar';
 
 const App = () => {
   const [images, setImages] = useState([]);
   const [fireBaseImages, setFireBaseImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uuid, setUuid] = useState('');
+  const [commentCount, setCommentCount] = useState(0);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
+  console.log(isHomePage);
 
   const onSearchSubmit = async (term) => {
     setLoading(true);
@@ -35,6 +41,14 @@ const App = () => {
     ref.onSnapshot((item) => {
       const items = item.docs.map((doc) => doc.data());
       setFireBaseImages(items);
+    });
+  };
+
+  const getFireBaseUser = () => {
+    console.log(uuid);
+    const ref = firebase.firestore().collection('users').doc(uuid);
+    ref.onSnapshot((doc) => {
+      setCommentCount(doc.comments);
     });
   };
 
@@ -102,12 +116,16 @@ const App = () => {
 
   const handleComment = (doc, likes, comment, image) => {
     const photosRef = firebase.firestore().collection('photos').doc(doc);
+    const userRef = firebase.firestore().collection('users').doc(uuid);
     photosRef.get().then((document) => {
       if (document.exists) {
         updateFireBaseImageComments(photosRef, comment);
       } else {
         addFireBaseImage(photosRef, doc, likes, comment, image);
       }
+    });
+    userRef.update({
+      comments: firebase.firestore.FieldValue.increment(1),
     });
   };
 
@@ -148,51 +166,33 @@ const App = () => {
   useEffect(() => {
     anonSignIn();
     onSearchSubmit(seedData[Math.floor(Math.random() * seedData.length + 1)]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     getFireBaseImages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Router>
-      <>
+      <Switch>
         <div className='ui container'>
-          <div className='ui large secondary pointing menu'>
-            <Link to='/' className='item'>
-              Home
-            </Link>
-            <Link to='/likes' className='item'>
-              Likes
-            </Link>
-          </div>
+          <Navbar onSearchSubmit={onSearchSubmit} loading={loading} />
+          <Route exact path='/'>
+            <ImageList
+              images={images}
+              fireBaseImages={fireBaseImages}
+              handleComment={handleComment}
+              handleLike={handleLike}
+              uuid={uuid}
+            />
+          </Route>
+          <Route path='/likes'>
+            <UserLikes
+              fireBaseImages={fireBaseImages}
+              handleLike={handleLike}
+              uuid={uuid}
+            />
+          </Route>
         </div>
-        <Switch>
-          <div className='ui container'>
-            <Route exact path='/'>
-              <div className='ui stackable three column padded relaxed grid'>
-                <SearchBar onSubmit={onSearchSubmit} loading={loading} />
-                <ImageList
-                  images={images}
-                  fireBaseImages={fireBaseImages}
-                  handleComment={handleComment}
-                  handleLike={handleLike}
-                  uuid={uuid}
-                />
-              </div>
-            </Route>
-            <Route path='/likes'>
-              <UserLikes
-                fireBaseImages={fireBaseImages}
-                handleLike={handleLike}
-                uuid={uuid}
-              />
-            </Route>
-          </div>
-        </Switch>
-      </>
+      </Switch>
     </Router>
   );
 };

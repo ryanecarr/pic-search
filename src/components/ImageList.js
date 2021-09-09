@@ -9,7 +9,7 @@ const ImageList = ({
   uuid,
 }) => {
   const [syncedImages, setSyncedImages] = useState([]);
-  
+
   const syncImages = () => {
     let syncedImages = [];
     // eslint-disable-next-line array-callback-return
@@ -31,38 +31,40 @@ const ImageList = ({
 
   useEffect(() => {
     syncImages();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images]);
-  
+
   return (
     <>
-      {syncedImages.map(
-        ({
-          id,
-          user,
-          alt_description,
-          likes,
-          urls,
-          comments,
-          liked_by_user,
-        }) => (
-          <div className='column'>
-            <ImageCard
-              id={id}
-              avatar={user.profile_image.small}
-              user={user.name}
-              image={urls.small}
-              alt={alt_description}
-              likes={likes}
-              imgComments={comments}
-              handleComment={handleComment}
-              handleLike={handleLike}
-              liked_by_user={liked_by_user}
-              key={id}
-            />
-          </div>
-        )
-      )}
+      <div className='ui stackable centered grid'>
+        {syncedImages.map(
+          ({
+            id,
+            user,
+            alt_description,
+            likes,
+            urls,
+            comments,
+            liked_by_user,
+          }) => (
+            <div className='ten wide column'>
+              <ImageCard
+                id={id}
+                avatar={user.profile_image.small}
+                user={user.name}
+                image={urls.small}
+                alt={alt_description}
+                likes={likes}
+                imgComments={comments}
+                handleComment={handleComment}
+                handleLike={handleLike}
+                liked_by_user={liked_by_user}
+                key={id}
+              />
+            </div>
+          )
+        )}
+      </div>
     </>
   );
 };

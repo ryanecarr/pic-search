@@ -25,7 +25,7 @@ const UserLikes = ({ fireBaseImages, handleLike, uuid }) => {
   }, [fireBaseImages]);
 
   return (
-    <div>
+    <>
       <div className='ui hidden divider'></div>
       <div className='ui grid'>
         {images.length ? (
@@ -46,7 +46,7 @@ const UserLikes = ({ fireBaseImages, handleLike, uuid }) => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
