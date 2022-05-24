@@ -1,21 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const ImageCard = ({ avatar, user, image, alt, likes }) => {
-  const [liked, setLiked] = useState(false);
+const ImageCard = ({
+  id,
+  avatar,
+  user,
+  image,
+  alt,
+  likes,
+  liked_by_user,
+  imgComments = [],
+  handleComment,
+  handleLike,
+}) => {
+  const [liked, setLiked] = useState(liked_by_user);
   const [numLikes, setNumLikes] = useState(likes);
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState([]);
+  const [cardImage, setCardImage] = useState(image);
+  const [comments, setComments] = useState(imgComments);
+  const firstUpdate = useRef(true);
+
   const onLikeClick = () => {
     setLiked(!liked);
     setNumLikes(!liked ? numLikes + 1 : numLikes - 1);
   };
+
   const onFormSubmit = (e) => {
     e.preventDefault();
-    setComment('');
-    setComments([...comments, comment]);
+    if (comment !== '') {
+      handleComment(id, numLikes, comment, cardImage);
+      setComments([...comments, comment]);
+      setComment('');
+    }
   };
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+    } else {
+      handleLike(id, numLikes, comment, cardImage);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [liked]);
+
   return (
-    <div className='ui raised card'>
+    <div className='ui fluid card'>
       <div className='content'>
         <img className='ui avatar image' src={avatar} alt={user} /> {user}
       </div>
@@ -25,34 +53,41 @@ const ImageCard = ({ avatar, user, image, alt, likes }) => {
       <div className='content'>
         <span className='right floated'>
           <i
-            className={`heart like icon ${liked ? 'red filled' : 'outline'}`}
+            className={`large heart like icon ${
+              liked ? 'red filled' : 'outline'
+            }`}
             onClick={onLikeClick}
           ></i>
-          {numLikes}
         </span>
-        <i className='comment icon'></i>
-        {comments.length} comments
+        {numLikes} likes
       </div>
-      <div className='extra content'>
+      <div className='content'>
+        <div className='ui middle aligned list'>
+          {comments.length ? comments.map((comment, index) => (
+            <div className='item' key={index}>
+              <div className='content'>
+                anonymous <span className='comment'>{comment}</span>
+              </div>
+            </div>
+          )) : '...no comments yet, be the first!'}
+        </div>
         <form onSubmit={onFormSubmit}>
-          <div className='ui large transparent left icon input'>
-            <i className='heart outline icon'></i>
+          <div className='ui large transparent input fluid comment'>
             <input
               type='text'
-              placeholder='Add Comment...'
+              placeholder={
+                comments.length >= 5
+                  ? 'Commenting disabled...'
+                  : 'Add a comment...'
+              }
               value={comment}
               onChange={(e) => setComment(e.target.value)}
+              maxLength='150'
+              disabled={comments.length >= 5 ? 'disabled' : ''}
+              required
             />
           </div>
         </form>
-        <div class='ui middle aligned divided list'>
-          {comments.map((comment) => (
-            <div class='item'>
-              <i class='large user middle circle icon'></i>
-              <div class='content'>{comment}</div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const SearchBar = ({ onSubmit, loading }) => {
   const [term, setTerm] = useState('');
+  const location = useLocation();
+
   const onFormSubmit = (e) => {
     e.preventDefault();
-    onSubmit(term, 'form');
+    onSubmit(term);
   };
+
   return (
-    <div className='row'>
-      <div className='column centered'>
+    <>
+      {location.pathname === '/' && (
         <form className='ui search' onSubmit={onFormSubmit}>
-          <div className='field'>
-            <div
-              className={`ui fluid big icon input ${loading ? 'loading' : ''}`}
-            >
+          <div className='ui category search item'>
+            <div className={`ui icon input ${loading ? 'loading' : ''}`}>
               <input
                 value={term}
-                className='prompt'
                 type='text'
                 autoComplete='off'
                 placeholder='Search...'
@@ -26,8 +27,8 @@ const SearchBar = ({ onSubmit, loading }) => {
             </div>
           </div>
         </form>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
