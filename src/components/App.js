@@ -38,7 +38,7 @@ const App = () => {
     });
   };
 
-/*   const getFireBaseUser = () => {
+  /*   const getFireBaseUser = () => {
     console.log(uuid);
     const ref = firebase.firestore().collection('users').doc(uuid);
     ref.onSnapshot((doc) => {
@@ -133,13 +133,28 @@ const App = () => {
     });
   };
 
-  const handleLike = (doc, likes, comment = '', image = '') => {
+  const handleLike = (doc, likes, comment = '', image = '', liked) => {
+    console.log('liked: ', liked);
     const photosRef = firebase.firestore().collection('photos').doc(doc);
+    const userRef = firebase.firestore().collection('users').doc(uuid);
     photosRef.get().then((document) => {
       if (document.exists) {
         updateFireBaseImageLikes(photosRef, document, likes);
       } else {
         addFireBaseImage(photosRef, doc, likes, comment, image);
+      }
+      if (liked) {
+        userRef.update({
+          likes: firebase.firestore.FieldValue.increment(1),
+        });
+      } else {
+        userRef.get().then((document) => {
+          if (document.data().likes) {
+            userRef.update({
+              likes: firebase.firestore.FieldValue.increment(-1),
+            });
+          }
+        });
       }
     });
   };

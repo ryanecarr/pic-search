@@ -37,7 +37,7 @@ const ImageCard = ({
     if (firstUpdate.current) {
       firstUpdate.current = false;
     } else {
-      handleLike(id, numLikes, comment, cardImage);
+      handleLike(id, numLikes, comment, cardImage, liked);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [liked]);
