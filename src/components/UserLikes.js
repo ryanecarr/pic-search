@@ -40,7 +40,7 @@ const UserLikes = ({ fireBaseImages, handleLike, uuid }) => {
           ))
         ) : (
           <div className='ui one column center aligned'>
-            <div class='ui compact message'>
+            <div className='ui compact message'>
               <p>You haven't liked any images yet!</p>
             </div>
           </div>

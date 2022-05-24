@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  withRouter,
-  useLocation,
-} from 'react-router-dom';
+import { Switch, Route, useLocation } from 'react-router-dom';
 
 import ImageList from './ImageList';
 import UserLikes from './UserLikes';
@@ -44,13 +38,13 @@ const App = () => {
     });
   };
 
-  const getFireBaseUser = () => {
+/*   const getFireBaseUser = () => {
     console.log(uuid);
     const ref = firebase.firestore().collection('users').doc(uuid);
     ref.onSnapshot((doc) => {
       setCommentCount(doc.comments);
     });
-  };
+  }; */
 
   const addFireBaseImage = (photosRef, doc, likes, comment, image) => {
     photosRef
@@ -97,6 +91,10 @@ const App = () => {
       });
   };
 
+  const deleteFireBaseImage = (photosRef) => {
+    photosRef.delete();
+  };
+
   const updateFireBaseImageLikes = (photosRef, document, likes) => {
     const liked = document.data().liked_by_user.some((id) => id === uuid);
     photosRef
@@ -107,7 +105,13 @@ const App = () => {
           : firebase.firestore.FieldValue.arrayUnion(uuid),
       })
       .then(() => {
-        console.log('Document likes successfully updated');
+        photosRef.get().then((document) => {
+          const comments = document.data().comments.length;
+          const likedByUser = document.data().liked_by_user.length;
+          if (comments === 0 && likedByUser === 0) {
+            deleteFireBaseImage(photosRef);
+          }
+        });
       })
       .catch((error) => {
         console.error('Error updating document likes: ', error);
@@ -167,34 +171,31 @@ const App = () => {
     anonSignIn();
     onSearchSubmit(seedData[Math.floor(Math.random() * seedData.length + 1)]);
     getFireBaseImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Router>
+    <div className='ui container'>
+      <Navbar onSearchSubmit={onSearchSubmit} loading={loading} />
       <Switch>
-        <div className='ui container'>
-          <Navbar onSearchSubmit={onSearchSubmit} loading={loading} />
-          <Route exact path='/'>
-            <ImageList
-              images={images}
-              fireBaseImages={fireBaseImages}
-              handleComment={handleComment}
-              handleLike={handleLike}
-              uuid={uuid}
-            />
-          </Route>
-          <Route path='/likes'>
-            <UserLikes
-              fireBaseImages={fireBaseImages}
-              handleLike={handleLike}
-              uuid={uuid}
-            />
-          </Route>
-        </div>
+        <Route exact path='/'>
+          <ImageList
+            images={images}
+            fireBaseImages={fireBaseImages}
+            handleComment={handleComment}
+            handleLike={handleLike}
+            uuid={uuid}
+          />
+        </Route>
+        <Route path='/likes'>
+          <UserLikes
+            fireBaseImages={fireBaseImages}
+            handleLike={handleLike}
+            uuid={uuid}
+          />
+        </Route>
       </Switch>
-    </Router>
+    </div>
   );
 };
 
-export default withRouter(App);
+export default App;

@@ -63,8 +63,8 @@ const ImageCard = ({
       </div>
       <div className='content'>
         <div className='ui middle aligned list'>
-          {comments.length ? comments.map((comment) => (
-            <div className='item'>
+          {comments.length ? comments.map((comment, index) => (
+            <div className='item' key={index}>
               <div className='content'>
                 anonymous <span className='comment'>{comment}</span>
               </div>

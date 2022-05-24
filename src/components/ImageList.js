@@ -31,7 +31,7 @@ const ImageList = ({
 
   useEffect(() => {
     syncImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return undefined;
   }, [images]);
 
   return (
@@ -47,7 +47,7 @@ const ImageList = ({
             comments,
             liked_by_user,
           }) => (
-            <div className='ten wide column'>
+            <div className='ten wide column' key={id}>
               <ImageCard
                 id={id}
                 avatar={user.profile_image.small}

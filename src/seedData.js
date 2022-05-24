@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
   'river',
-  'hawaii',
+  'grass',
   'art',
   'beach',
   'computer',
@@ -26,7 +26,7 @@ export default [
   'vacation',
   'pool',
   'vault',
-  'ducati',
+  'motorcycle',
   'miami',
   'portland',
   'desert',
