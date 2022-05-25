@@ -12,7 +12,6 @@ const App = () => {
   const [fireBaseImages, setFireBaseImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uuid, setUuid] = useState('');
-  const [showMessage, setShowMessage] = useState(false);
 
   const onSearchSubmit = async (term) => {
     setLoading(true);
@@ -159,29 +158,16 @@ const App = () => {
     onSearchSubmit(seedData[Math.floor(Math.random() * seedData.length + 1)]);
     /* getFireBaseImages(); */
     const unsubscribe = firebase.firestore().collection('photos');
-    unsubscribe.onSnapshot(
-      (item) => {
-        const items = item.docs.map((doc) => doc.data());
-        setFireBaseImages(items);
-      },
-      (error) => {
-        setShowMessage(true);
-      }
-    );
+    unsubscribe.onSnapshot((item) => {
+      const items = item.docs.map((doc) => doc.data());
+      setFireBaseImages(items);
+    });
     return () => unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className='ui container'>
-      <div
-        className={`ui tiny negative message ${
-          showMessage ? 'visible' : 'hidden'
-        }`}
-      >
-        <div className='header'>Something went wrong</div>
-        <p>Error retrieving update from server, please refresh the page</p>
-      </div>
       <Navbar onSearchSubmit={onSearchSubmit} loading={loading} />
       <Switch>
         <Route exact path='/'>
