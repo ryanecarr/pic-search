@@ -31,8 +31,11 @@ const ImageList = ({
 
   useEffect(() => {
     syncImages();
-    return undefined;
   }, [images]);
+
+  useEffect(() => {
+    syncImages();
+  }, [fireBaseImages]);
 
   return (
     <>

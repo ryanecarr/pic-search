@@ -4,14 +4,14 @@ import SearchBar from './SearchBar';
 
 const Navbar = ({ onSearchSubmit, loading }) => {
   return (
-    <div class='ui stackable three column grid top-bar'>
-      <div class='column logo'>
+    <div className='ui stackable three column grid top-bar'>
+      <div className='column logo'>
         <div className='left menu imagegram-logo'>imagegram</div>
       </div>
-      <div class='center aligned column'>
+      <div className='center aligned column'>
         <SearchBar onSubmit={onSearchSubmit} loading={loading} />
       </div>
-      <div class='column icons'>
+      <div className='column icons'>
         <Link to='/' className='item'>
           <i className='large home icon'></i>
         </Link>
