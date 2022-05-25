@@ -18,7 +18,7 @@ const ImageLike = ({ id, likes, image, handleLike }) => {
   }, [numLikes]);
 
   return (
-    <div className='ui four wide column'>
+    <div className='center aligned column'>
       <div className='icon-holder' onClick={onRemoveClick}>
         <i className='red times circle icon big'></i>
       </div>

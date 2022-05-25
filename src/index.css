@@ -34,7 +34,7 @@ code {
 
 .top-bar .icon {
   color: black;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 }
 
 .content {
@@ -50,3 +50,34 @@ code {
   border-top: 0 !important;
 }
 
+.input {
+  width: 100%
+}
+
+.logo {
+  text-align: left;
+  
+}
+
+.icons {
+  text-align: right;
+}
+
+  .icons .item {
+    margin-left: 30px;
+  }
+
+@media screen and (max-width: 768px) {
+  .input {
+    width: 100%;
+  }
+  .logo {
+    text-align: center;
+  }
+  .icons {
+    text-align: center;
+  }
+  .icons .item {
+    margin: 20px
+  }
+}
