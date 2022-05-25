@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
-
 import ImageList from './ImageList';
 import UserLikes from './UserLikes';
 import firebase from '../api/firebase';
@@ -13,12 +12,14 @@ const App = () => {
   const [fireBaseImages, setFireBaseImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uuid, setUuid] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
 
   const onSearchSubmit = async (term) => {
     setLoading(true);
+    const searchTerm = term || 'beach';
     const response = await unsplash.get('/search/photos', {
       params: {
-        query: term,
+        query: searchTerm,
       },
     });
     setImages(response.data.results);
@@ -47,7 +48,9 @@ const App = () => {
     ref
       .doc(id)
       .set({
+        comments: 0,
         created: firebase.firestore.Timestamp.fromDate(new Date()),
+        likes: 0,
       })
       .then(() => {
         console.log('User successfully added');
@@ -156,16 +159,29 @@ const App = () => {
     onSearchSubmit(seedData[Math.floor(Math.random() * seedData.length + 1)]);
     /* getFireBaseImages(); */
     const unsubscribe = firebase.firestore().collection('photos');
-    unsubscribe.onSnapshot((item) => {
-      const items = item.docs.map((doc) => doc.data());
-      setFireBaseImages(items);
-    });
+    unsubscribe.onSnapshot(
+      (item) => {
+        const items = item.docs.map((doc) => doc.data());
+        setFireBaseImages(items);
+      },
+      (error) => {
+        setShowMessage(true);
+      }
+    );
     return () => unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className='ui container'>
+      <div
+        className={`ui tiny negative message ${
+          showMessage ? 'visible' : 'hidden'
+        }`}
+      >
+        <div className='header'>Something went wrong</div>
+        <p>Error retrieving update from server, please refresh the page</p>
+      </div>
       <Navbar onSearchSubmit={onSearchSubmit} loading={loading} />
       <Switch>
         <Route exact path='/'>
