@@ -21,13 +21,13 @@ const UserLikes = ({ fireBaseImages, handleLike, uuid }) => {
 
   useEffect(() => {
     getUserLikedImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return undefined;
   }, [fireBaseImages]);
 
   return (
     <>
       <div className='ui hidden divider'></div>
-      <div className='ui grid'>
+      <div className='ui stackable three column grid'>
         {images.length ? (
           images.map(({ id, likes, imageURL }) => (
             <ImageLike

@@ -4,27 +4,23 @@ import SearchBar from './SearchBar';
 
 const Navbar = ({ onSearchSubmit, loading }) => {
   return (
-    <div className='ui grid top-bar'>
-      <div className='three column row'>
-        <div className='left aligned column'>
-          <div className='left menu imagegram-logo'>Imagegram</div>
-        </div>
-        <div className='center aligned column'>
-          <div className='center menu'>
-            <SearchBar onSubmit={onSearchSubmit} loading={loading} />
-          </div>
-        </div>
-        <div className='right aligned column'>
-          <Link to='/' className='item'>
-            <i className='large home icon'></i>
-          </Link>
-          <Link to='/likes' className='item'>
-            <i className='large heart icon'></i>
-          </Link>
-          <Link to='/' className='item'>
-            <i className='large user circle icon'></i>
-          </Link>
-        </div>
+    <div class='ui stackable three column grid top-bar'>
+      <div class='column logo'>
+        <div className='left menu imagegram-logo'>imagegram</div>
+      </div>
+      <div class='center aligned column'>
+        <SearchBar onSubmit={onSearchSubmit} loading={loading} />
+      </div>
+      <div class='column icons'>
+        <Link to='/' className='item'>
+          <i className='large home icon'></i>
+        </Link>
+        <Link to='/likes' className='item'>
+          <i className='large heart icon'></i>
+        </Link>
+        <Link to='/' className='item'>
+          <i className='large user circle icon'></i>
+        </Link>
       </div>
     </div>
   );
