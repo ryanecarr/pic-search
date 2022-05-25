@@ -42,6 +42,14 @@ const ImageCard = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [liked]);
 
+  useEffect(() => {
+    setNumLikes(likes);
+  }, [likes]);
+
+   useEffect(() => {
+    setComments(imgComments);
+  }, [imgComments]);
+
   return (
     <div className='ui fluid card'>
       <div className='content'>
@@ -63,13 +71,15 @@ const ImageCard = ({
       </div>
       <div className='content'>
         <div className='ui middle aligned list'>
-          {comments.length ? comments.map((comment, index) => (
-            <div className='item' key={index}>
-              <div className='content'>
-                anonymous <span className='comment'>{comment}</span>
-              </div>
-            </div>
-          )) : '...no comments yet, be the first!'}
+          {comments.length
+            ? comments.map((comment, index) => (
+                <div className='item' key={index}>
+                  <div className='content'>
+                    anonymous <span className='comment'>{comment}</span>
+                  </div>
+                </div>
+              ))
+            : '...no comments yet, be the first!'}
         </div>
         <form onSubmit={onFormSubmit}>
           <div className='ui large transparent input fluid comment'>
