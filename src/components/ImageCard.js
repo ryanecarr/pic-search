@@ -65,6 +65,7 @@ const ImageCard = ({
               liked ? 'red filled' : 'outline'
             }`}
             onClick={onLikeClick}
+            id={id}
           ></i>
         </span>
         {numLikes} likes
