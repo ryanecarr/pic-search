@@ -8,6 +8,7 @@ const SearchBar = ({ onSubmit, loading }) => {
   const onFormSubmit = (e) => {
     e.preventDefault();
     onSubmit(term);
+    setTerm('');
   };
 
   return (
