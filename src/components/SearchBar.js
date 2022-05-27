@@ -13,7 +13,7 @@ const SearchBar = ({ onSubmit, loading }) => {
   return (
     <>
       {location.pathname === '/' && (
-        <form className='ui search' onSubmit={onFormSubmit}>
+        <form id='search_form' className='ui search' onSubmit={onFormSubmit}>
           <div className='ui category search item'>
             <div className={`ui icon input ${loading ? 'loading' : ''}`}>
               <input

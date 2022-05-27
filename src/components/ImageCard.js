@@ -82,7 +82,7 @@ const ImageCard = ({
               ))
             : '...no comments yet, be the first!'}
         </div>
-        <form onSubmit={onFormSubmit} id={`form_${id}`}>
+        <form onSubmit={onFormSubmit} id={`comment_form_${id}`}>
           <div className='ui large transparent input fluid comment'>
             <input
               type='text'
