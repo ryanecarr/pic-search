@@ -65,7 +65,7 @@ const ImageCard = ({
               liked ? 'red filled' : 'outline'
             }`}
             onClick={onLikeClick}
-            id={id}
+            id={`image_${id}`}
           ></i>
         </span>
         {numLikes} likes
@@ -82,7 +82,7 @@ const ImageCard = ({
               ))
             : '...no comments yet, be the first!'}
         </div>
-        <form onSubmit={onFormSubmit}>
+        <form onSubmit={onFormSubmit} id={`form_${id}`}>
           <div className='ui large transparent input fluid comment'>
             <input
               type='text'
