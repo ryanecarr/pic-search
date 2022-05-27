@@ -23,7 +23,10 @@ const SearchBar = ({ onSubmit, loading }) => {
                 placeholder='Search...'
                 onChange={(e) => setTerm(e.target.value)}
               />
-              <i className='search icon'></i>
+              <i
+                className='circular search link icon'
+                onClick={onFormSubmit}
+              ></i>
             </div>
           </div>
         </form>
