@@ -13,13 +13,13 @@ const Navbar = ({ onSearchSubmit, loading }) => {
       </div>
       <div className='column icons'>
         <Link to='/' className='item'>
-          <i className='large home icon'></i>
+          <i className='large home icon' id='home_icon'></i>
         </Link>
         <Link to='/likes' className='item'>
-          <i className='large heart icon'></i>
+          <i className='large heart icon' id='likes_icon'></i>
         </Link>
         <Link to='/' className='item'>
-          <i className='large user circle icon'></i>
+          <i className='large user circle icon' id='user_icon'></i>
         </Link>
       </div>
     </div>
